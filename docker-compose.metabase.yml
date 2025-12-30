@@ -1,0 +1,26 @@
+services:
+  watcher:
+    image: floibach/pullpulse
+    environment:
+      - DB_PATH=/data/pulls.sqlite      
+    volumes:
+      - ./data:/data
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+  
+  metabase:
+    image: metabase/metabase:latest
+    container_name: pullpulse-metabase
+    ports:
+      - "3005:3000"
+    volumes:
+      # SQLite database from pullpulse (read-only)
+      - ./data:/data:ro
+
+      # Metabase internal application database
+      - ./metabase-data:/metabase-data
+    environment:
+      - MB_DB_FILE=/metabase-data/metabase.db
+    restart: unless-stopped
+    

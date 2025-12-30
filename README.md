@@ -4,7 +4,6 @@ TODO (fi):
 - responsive design (cards)
 - repos als startpage -> bei empty repos message (setup your first target)
 - screenshots
-- was müsste man für einen prometheus exporter machen?
 - order by repo id
 
 
@@ -94,6 +93,14 @@ services:
 ```
 
 Then open:[http://localhost:8080](http://localhost:8080)
+
+## Visualization
+
+pullpulse stores all metrics in a local SQLite database, making it easy to visualize pull history and trends.
+
+A step-by-step guide for setting up **Metabase** with pullpulse is available in the project wiki:
+
+- [Visualization – Metabase Setup](https://github.com/florianibach/pullpulse/wiki/Visualization-%E2%80%90-Metabase-Setup)
 
 ## Configuration
 
