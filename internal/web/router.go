@@ -14,15 +14,16 @@ type Router struct {
 func NewRouter(db *sql.DB, w *watcher.Service, tpl *Templates) http.Handler {
 	h := NewHandlers(db, w, tpl)
 	mux := http.NewServeMux()
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 
 	mux.HandleFunc("/", h.Home)
 
-	mux.HandleFunc("/targets", h.TargetsListOrCreate)      // GET list, POST create
-	mux.HandleFunc("/targets/new", h.TargetNew)            // GET
-	mux.HandleFunc("/targets/edit", h.TargetEditOrUpdate)  // GET?id=, POST update
+	mux.HandleFunc("/targets", h.TargetsListOrCreate)     // GET list, POST create
+	mux.HandleFunc("/targets/new", h.TargetNew)           // GET
+	mux.HandleFunc("/targets/edit", h.TargetEditOrUpdate) // GET?id=, POST update
 
-	mux.HandleFunc("/repos", h.ReposList)                  // GET
-	mux.HandleFunc("/repo", h.RepoDetail)                  // GET?repo_id=
+	mux.HandleFunc("/repos", h.ReposList) // GET
+	mux.HandleFunc("/repo", h.RepoDetail) // GET?repo_id=
 
 	return mux
 }

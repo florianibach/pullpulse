@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 WORKDIR /app
 COPY --from=build /out/watcher /app/watcher
 COPY web/templates /app/web/templates
+COPY web/static /app/web/static
+
 ENV DB_PATH=/data/pulls.sqlite
 ENV LISTEN_ADDR=:8080
 VOLUME ["/data"]
