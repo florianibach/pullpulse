@@ -4,93 +4,67 @@
 
 {{ define "content" }}
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="h3 mb-0">Targets</h1>
-  <a class="btn btn-primary" href="/targets/new">New</a>
+  <h1 class="h3 mb-0">{{ if .IsNew }}New{{ else }}Edit{{ end }} Target</h1>
+  <a class="btn btn-outline-secondary" href="/targets">Back</a>
 </div>
 
-<div class="table-responsive">
-  <table class="table table-sm align-middle">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Mode</th>
-        <th>Namespace</th>
-        <th>Repos</th>
-        <th>Interval</th>
-        <th>Enabled</th>
-        <th>Last run</th>
-        <th>Error</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {{ range .Targets }}
-      <tr>
-        <td class="fw-semibold">{{ .Name }}</td>
-        <td><span class="badge text-bg-secondary">{{ .Mode }}</span></td>
-        <td>{{ .Namespace }}</td>
-        <td class="text-truncate" style="max-width: 320px;">{{ .ReposCSV }}</td>
-        <td>{{ .IntervalSeconds }}s</td>
-        <td>{{ if .Enabled }}✅{{ else }}—{{ end }}</td>
-        <td class="text-muted">{{ .LastRunUTC }}</td>
-        <td class="text-danger">{{ .LastError }}</td>
-        <td>
-          <a class="btn btn-sm btn-outline-primary" href="/targets/edit?id={{ .ID }}">Edit</a>
-        </td>
-      </tr>
-      {{ end }}
-      {{ if not .Targets }}
-      <tr>
-        <td colspan="9" class="text-muted">No targets yet. Create one.</td>
-      </tr>
-      {{ end }}
-    </tbody>
-  </table>
-</div>
-
-<div class="card mt-4">
+<form method="post" action="/targets/edit" class="card">
   <div class="card-body">
-    <h2 class="h5 mb-3">Quick add</h2>
+    {{ if not .IsNew }}
+      <input type="hidden" name="id" value="{{ .Target.ID }}">
+    {{ end }}
 
-    <form method="post" action="/targets">
-      <div class="row g-2">
-        <div class="col-md-3">
-          <input class="form-control" name="name" placeholder="Name (e.g. floibach public)" required>
-        </div>
-
-        <div class="col-md-2">
-          <select class="form-select" name="mode">
-            <option value="repos">repos</option>
-            <option value="user">user</option>
-          </select>
-        </div>
-
-        <div class="col-md-2">
-          <input class="form-control" name="namespace" placeholder="Namespace (user/org)" required>
-        </div>
-
-        <div class="col-md-3">
-          <input class="form-control" name="repos_csv" placeholder="repos (comma sep, for repos-mode)">
-        </div>
-
-        <div class="col-md-2">
-          <input class="form-control" name="interval_seconds" value="900" placeholder="interval seconds">
-        </div>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label">Name</label>
+        <input class="form-control" name="name" value="{{ .Target.Name }}" required>
       </div>
 
-      <div class="form-check mt-3">
-        <input class="form-check-input" type="checkbox" name="enabled" id="enabled" checked>
-        <label class="form-check-label" for="enabled">Enabled</label>
+      <div class="col-md-2">
+        <label class="form-label">Mode</label>
+        <select class="form-select" name="mode">
+          <option value="repos" {{ if eq .Target.Mode "repos" }}selected{{ end }}>repos</option>
+          <option value="user"  {{ if eq .Target.Mode "user" }}selected{{ end }}>user</option>
+        </select>
       </div>
 
-      <div class="mt-3">
-        <button class="btn btn-success" type="submit">Create</button>
+      <div class="col-md-3">
+        <label class="form-label">Namespace</label>
+        <input class="form-control" name="namespace" value="{{ .Target.Namespace }}" required>
       </div>
 
-      <div class="form-text mt-2">
-        Tip: For user-mode, leave repos empty. For repos-mode, set repos_csv.
+      <div class="col-md-3">
+        <label class="form-label">Interval (seconds)</label>
+        <input class="form-control" name="interval_seconds" value="{{ .Target.IntervalSeconds }}" required>
+        <div class="form-text">Example: 900 = 15 minutes</div>
       </div>
-    </form>
+    </div>
+
+    <div class="mt-3">
+      <label class="form-label">Repos (only for repos-mode)</label>
+      <textarea class="form-control" name="repos_csv" rows="4" placeholder="repo1,repo2,repo3">{{ .Target.ReposCSV }}</textarea>
+      <div class="form-text">
+        Comma-separated. You can paste multiple lines; spaces will be stripped.
+      </div>
+    </div>
+
+    <div class="form-check mt-3">
+      <input class="form-check-input" type="checkbox" name="enabled" id="enabled" {{ if .Target.Enabled }}checked{{ end }}>
+      <label class="form-check-label" for="enabled">Enabled</label>
+    </div>
+
+    {{ if .Target.LastRunUTC }}
+    <div class="mt-3 small text-muted">
+      Last run: {{ .Target.LastRunUTC }}
+      {{ if .Target.LastError }}<span class="text-danger ms-2">Error: {{ .Target.LastError }}</span>{{ end }}
+    </div>
+    {{ end }}
   </div>
-</div>
+
+  <div class="card-footer d-flex gap-2">
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn btn-outline-secondary" href="/targets">Cancel</a>
+  </div>
+</form>
 {{ end }}
+
