@@ -79,7 +79,7 @@ func InsertSnapshotAndDelta(dbx *sql.DB, repoID int64, ts time.Time, pullCount, 
 }
 
 func ListKnownRepos(dbx *sql.DB) ([]Repo, error) {
-	rows, err := dbx.Query(`SELECT id, namespace, name FROM repos ORDER BY namespace, name`)
+	rows, err := dbx.Query(`SELECT id, namespace, name FROM repos ORDER BY id DESC`)
 	if err != nil {
 		return nil, err
 	}
