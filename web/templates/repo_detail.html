@@ -1,3 +1,4 @@
+<!-- repo_detail.html (READY TO COPY) -->
 {{ define "repo_detail_page" }}
   {{ template "layout" . }}
 {{ end }}
@@ -11,8 +12,28 @@
   <a class="btn btn-outline-secondary" href="/repos">Back</a>
 </div>
 
-<div class="row g-3">
-  <div class="col-12 col-xl-6">
+<!-- Pills (mobile only) -->
+<div class="d-lg-none mb-3">
+  <div class="nav nav-pills gap-2" role="tablist" aria-label="Repo detail view">
+    <button type="button"
+            class="nav-link active"
+            data-pp-view="snapshots"
+            aria-pressed="true">
+      Snapshots
+    </button>
+    <button type="button"
+            class="nav-link"
+            data-pp-view="deltas"
+            aria-pressed="false">
+      Deltas
+    </button>
+  </div>
+  <div class="form-text mt-2">On desktop both views are shown side-by-side.</div>
+</div>
+
+<!-- Single-source-of-truth content (rendered once) -->
+<div class="row g-3" id="pp-repo-detail">
+  <div class="col-12 col-lg-6" data-pp-panel="snapshots">
     <div class="card">
       <div class="card-header">Snapshots (latest 50)</div>
       <div class="card-body">
@@ -54,7 +75,7 @@
     </div>
   </div>
 
-  <div class="col-12 col-xl-6">
+  <div class="col-12 col-lg-6" data-pp-panel="deltas">
     <div class="card">
       <div class="card-header">Deltas (latest 50)</div>
       <div class="card-body">
@@ -100,4 +121,65 @@
     </div>
   </div>
 </div>
+
+<script>
+(function () {
+  // Only needed on mobile; desktop shows both columns anyway.
+  const root = document.getElementById("pp-repo-detail");
+  if (!root) return;
+
+  const mediaLg = window.matchMedia("(min-width: 992px)"); // Bootstrap lg
+
+  const pills = document.querySelectorAll('[data-pp-view]');
+  const panels = {
+    snapshots: root.querySelector('[data-pp-panel="snapshots"]'),
+    deltas: root.querySelector('[data-pp-panel="deltas"]'),
+  };
+
+  function setActive(view) {
+    // Update pills
+    pills.forEach(btn => {
+      const isActive = btn.getAttribute("data-pp-view") === view;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+
+    // Desktop: always show both
+    if (mediaLg.matches) {
+      panels.snapshots.classList.remove("d-none");
+      panels.deltas.classList.remove("d-none");
+      return;
+    }
+
+    // Mobile: show only selected
+    panels.snapshots.classList.toggle("d-none", view !== "snapshots");
+    panels.deltas.classList.toggle("d-none", view !== "deltas");
+  }
+
+  // Click handling
+  pills.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const view = btn.getAttribute("data-pp-view") || "snapshots";
+      // Optional: persist in URL hash
+      try { history.replaceState(null, "", "#" + view); } catch (e) {}
+      setActive(view);
+    });
+  });
+
+  // Initial state: hash > default snapshots
+  let initial = "snapshots";
+  const hash = (location.hash || "").replace("#", "");
+  if (hash === "deltas" || hash === "snapshots") initial = hash;
+
+  setActive(initial);
+
+  // React to viewport changes (rotate phone etc.)
+  mediaLg.addEventListener("change", () => {
+    // Keep current active pill if present, else snapshots
+    const activeBtn = document.querySelector('[data-pp-view].active');
+    const view = activeBtn ? activeBtn.getAttribute("data-pp-view") : "snapshots";
+    setActive(view || "snapshots");
+  });
+})();
+</script>
 {{ end }}
