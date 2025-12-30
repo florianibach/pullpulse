@@ -1,13 +1,11 @@
 # pullpulse
 
 TODO (fi): 
-- Logo hier in readme
 - responsive design (cards)
 - repos als startpage -> bei empty repos message (setup your first target)
 - screenshots
-- docker run
 - was müsste man für einen prometheus exporter machen?
-order by repo id
+- order by repo id
 
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/florianibach/pullpulse)
@@ -24,6 +22,8 @@ If it helps you or saves you some time, you can support my work on [![BuyMeACoff
 Thank you for your support!
 
 ---
+
+![Logo](https://raw.githubusercontent.com/florianibach/pullpulse/refs/heads/master/docs/logo.png)
 
 Docker Hub only exposes a cumulative `pull_count`.  
 pullpulse periodically snapshots this value and derives **deltas, rates and trends** over time – stored locally in SQLite and ready for visualization.
