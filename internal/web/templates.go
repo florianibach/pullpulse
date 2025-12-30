@@ -6,14 +6,16 @@ import (
 )
 
 type Templates struct {
-	Base *template.Template
+	Dir string
 }
 
 func LoadTemplates(dir string) (*Templates, error) {
-	pattern := filepath.Join(dir, "*.html")
-	t, err := template.New("base").ParseGlob(pattern)
-	if err != nil {
-		return nil, err
-	}
-	return &Templates{Base: t}, nil
+	return &Templates{Dir: dir}, nil
+}
+
+func (t *Templates) Page(name string) (*template.Template, error) {
+	// name z.B. "targets_list.html"
+	layout := filepath.Join(t.Dir, "layout.html")
+	page := filepath.Join(t.Dir, name)
+	return template.ParseFiles(layout, page)
 }

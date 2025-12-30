@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"dockerhub-pull-watcher/internal/db"
 	"dockerhub-pull-watcher/internal/watcher"
@@ -37,17 +36,29 @@ func (h *Handlers) TargetsListOrCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = h.tpl.Base.ExecuteTemplate(w, "targets_list.html", map[string]any{
+	tpl, err := h.tpl.Page("targets_list.html")
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	_ = tpl.ExecuteTemplate(w, "targets_list_page", map[string]any{
 		"Title":   "Targets",
 		"Targets": targets,
 	})
+
 }
 
 func (h *Handlers) TargetNew(w http.ResponseWriter, r *http.Request) {
-	_ = h.tpl.Base.ExecuteTemplate(w, "target_edit.html", map[string]any{
-		"Title":  "New Target",
-		"Target": db.Target{Enabled: true, IntervalSeconds: int64((15 * time.Minute).Seconds()), Mode: "repos"},
+	tpl, err := h.tpl.Page("target_edit.html")
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	_ = tpl.ExecuteTemplate(w, "target_edit_page", map[string]any{
+		"Title":  "Edit Target",
 		"IsNew":  true,
+		"Target": db.Target{Enabled: true, Mode: "repos", IntervalSeconds: 900},
 	})
 }
 
@@ -64,10 +75,16 @@ func (h *Handlers) TargetEditOrUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = h.tpl.Base.ExecuteTemplate(w, "target_edit.html", map[string]any{
+	tpl, err := h.tpl.Page("target_edit.html")
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	_ = tpl.ExecuteTemplate(w, "target_edit_page", map[string]any{
 		"Title":  "Edit Target",
-		"Target": t,
 		"IsNew":  false,
+		"Target": t,
 	})
 }
 
@@ -128,8 +145,14 @@ func (h *Handlers) ReposList(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	_ = h.tpl.Base.ExecuteTemplate(w, "repos_list.html", map[string]any{
-		"Title": "Known Repositories",
+	tpl, err := h.tpl.Page("repos_list.html")
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	_ = tpl.ExecuteTemplate(w, "repos_list_page", map[string]any{
+		"Title": "Known repositories",
 		"Repos": repos,
 	})
 }
@@ -161,10 +184,16 @@ func (h *Handlers) RepoDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = h.tpl.Base.ExecuteTemplate(w, "repo_detail.html", map[string]any{
-		"Title":    selected.Namespace + "/" + selected.Name,
-		"Repo":     selected,
-		"Snaps":    snaps,
-		"Deltas":   deltas,
+	tpl, err := h.tpl.Page("repo_detail.html")
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	_ = tpl.ExecuteTemplate(w, "repo_detail_page", map[string]any{
+		"Title":  selected.Namespace + "/" + selected.Name,
+		"Repo":   selected,
+		"Snaps":  snaps,
+		"Deltas": deltas,
 	})
 }

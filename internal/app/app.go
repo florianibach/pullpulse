@@ -3,6 +3,8 @@ package app
 import (
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"dockerhub-pull-watcher/internal/db"
 	"dockerhub-pull-watcher/internal/dockerhub"
@@ -11,14 +13,16 @@ import (
 )
 
 type App struct {
-	cfg     Config
-	w       *watcher.Service
-	server  *http.Server
+	cfg    Config
+	w      *watcher.Service
+	server *http.Server
 }
 
 func NewFromEnv() (*App, error) {
 	cfg := LoadConfig()
-
+	if err := os.MkdirAll(filepath.Dir(cfg.DBPath), 0o755); err != nil {
+		return nil, err
+	}
 	d, err := db.Open(cfg.DBPath)
 	if err != nil {
 		return nil, err

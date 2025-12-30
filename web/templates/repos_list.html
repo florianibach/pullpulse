@@ -1,17 +1,29 @@
-{{ define "repos_list.html" }}
-{{ define "content" }}
-<h1 class="h3">Known repositories</h1>
-<p class="text-muted">Repos appear here after the watcher has collected at least one snapshot.</p>
+{{ define "repos_list_page" }}
+  {{ template "layout" . }}
+{{ end }}
 
+{{ define "content" }}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h1 class="h3 mb-0">Known repositories</h1>
+    <div class="text-muted small">Repositories appear after at least one snapshot was collected.</div>
+  </div>
+  <a class="btn btn-outline-secondary" href="/targets">Targets</a>
+</div>
+
+{{ if .Repos }}
 <div class="list-group">
   {{ range .Repos }}
     <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
        href="/repo?repo_id={{ .ID }}">
-      <span>{{ .Namespace }}/{{ .Name }}</span>
+      <span class="fw-semibold">{{ .Namespace }}/{{ .Name }}</span>
       <span class="badge text-bg-light">ID {{ .ID }}</span>
     </a>
   {{ end }}
 </div>
+{{ else }}
+<div class="alert alert-info">
+  No repositories yet. Add a target and wait for the first poll cycle.
+</div>
 {{ end }}
-{{ template "layout" . }}
 {{ end }}

@@ -1,4 +1,7 @@
-{{ define "repo_detail.html" }}
+{{ define "repo_detail_page" }}
+  {{ template "layout" . }}
+{{ end }}
+
 {{ define "content" }}
 <h1 class="h3">{{ .Repo.Namespace }}/{{ .Repo.Name }}</h1>
 
@@ -44,6 +47,4 @@
 <div class="mt-3">
   <a class="btn btn-outline-secondary" href="/repos">Back</a>
 </div>
-{{ end }}
-{{ template "layout" . }}
 {{ end }}
