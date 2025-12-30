@@ -15,12 +15,27 @@
       <img src="/static/logo.png" alt="pullpulse" width="32" height="32" lass="d-inline-block align-text-top">
       <span class="fw-semibold">pullpulse</span>
     </a>
-    <div class="navbar-nav">
-      <a class="nav-link" href="/repos">Repos</a>
-      <a class="nav-link" href="/targets">Targets</a>      
+    
+    <!-- Mobile hamburger -->
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapsible links -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/repos">Repos</a>
+        <a class="nav-link" href="/targets">Targets</a>
+      </div>
     </div>
   </div>
 </nav>
+
 
 <main class="container py-4">
   {{ template "content" . }}
