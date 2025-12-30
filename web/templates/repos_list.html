@@ -22,8 +22,14 @@
   {{ end }}
 </div>
 {{ else }}
-<div class="alert alert-info">
-  No repositories yet. Add a target and wait for the first poll cycle.
-</div>
+  <div class="alert alert-info">
+    <div class="fw-semibold mb-1">No repositories yet.</div>
+    <div class="mb-2">
+      Create a target and wait for the first poll cycle. Repositories will appear here after the first snapshot is collected.
+    </div>
+    <a class="btn btn-sm btn-primary" href="/targets/new">Create target</a>
+    <a class="btn btn-sm btn-outline-secondary ms-2" href="/targets">View targets</a>
+  </div>
 {{ end }}
+
 {{ end }}

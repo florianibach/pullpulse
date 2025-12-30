@@ -21,7 +21,7 @@ func NewHandlers(dbx *sql.DB, w *watcher.Service, tpl *Templates) *Handlers {
 }
 
 func (h *Handlers) Home(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/targets", http.StatusFound)
+	http.Redirect(w, r, "/repos", http.StatusFound)
 }
 
 func (h *Handlers) TargetsListOrCreate(w http.ResponseWriter, r *http.Request) {
