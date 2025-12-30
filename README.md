@@ -62,9 +62,9 @@ Define what should be tracked:
 
 ## Screenshots
 
-![Targets](https://github.com/florianibach/pullpulse/blob/master/docs/screenshots/targets.png)
-![Repos](https://github.com/florianibach/pullpulse/blob/master/docs/screenshots/repos.png)
-![Repo Details](https://github.com/florianibach/pullpulse/blob/master/docs/screenshots/Repo%20Details.png)
+![Targets](https://raw.githubusercontent.com/florianibach/pullpulse/refs/heads/master/docs/screenshots/targets.png)
+![Repos](https://raw.githubusercontent.com/florianibach/pullpulse/refs/heads/master/docs/screenshots/repos.png)
+![Repo Details](https://raw.githubusercontent.com/florianibach/pullpulse/refs/heads/master/docs/screenshots/Repo%20Details.png)
 
 
 ## Quick start (Docker)
