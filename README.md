@@ -1,10 +1,7 @@
 # pullpulse
 
 TODO (fi): 
-- responsive design (cards)
-- repos als startpage -> bei empty repos message (setup your first target)
 - screenshots
-- order by repo id
 
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/florianibach/pullpulse)

@@ -5,31 +5,38 @@
 {{ define "content" }}
 <div class="d-flex justify-content-between align-items-center mb-3">
   <div>
-    <h1 class="h3 mb-0">Known repositories</h1>
-    <div class="text-muted small">Repositories appear after at least one snapshot was collected.</div>
+    <h1 class="h3 mb-0">Repositories</h1>
+    <div class="text-muted small">Repositories appear after the first snapshot was collected.</div>
   </div>
   <a class="btn btn-outline-secondary" href="/targets">Targets</a>
 </div>
 
 {{ if .Repos }}
-<div class="list-group">
+<div class="row g-3">
   {{ range .Repos }}
-    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-       href="/repo?repo_id={{ .ID }}">
-      <span class="fw-semibold">{{ .Namespace }}/{{ .Name }}</span>
-      <span class="badge text-bg-light">ID {{ .ID }}</span>
+  <div class="col-12 col-lg-6">
+    <a class="card h-100 text-decoration-none" href="/repo?repo_id={{ .ID }}">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start gap-2">
+          <div class="min-w-0">
+            <div class="fw-semibold">{{ .Namespace }}/{{ .Name }}</div>
+            <div class="text-muted small">Repo ID: {{ .ID }}</div>
+          </div>
+          <span class="badge text-bg-light">Open</span>
+        </div>
+      </div>
     </a>
+  </div>
   {{ end }}
 </div>
 {{ else }}
-  <div class="alert alert-info">
-    <div class="fw-semibold mb-1">No repositories yet.</div>
-    <div class="mb-2">
-      Create a target and wait for the first poll cycle. Repositories will appear here after the first snapshot is collected.
-    </div>
-    <a class="btn btn-sm btn-primary" href="/targets/new">Create target</a>
-    <a class="btn btn-sm btn-outline-secondary ms-2" href="/targets">View targets</a>
+<div class="alert alert-info">
+  <div class="fw-semibold mb-1">No repositories yet.</div>
+  <div class="mb-2">
+    Create a target and wait for the first poll cycle. Repositories will appear here after the first snapshot is collected.
   </div>
+  <a class="btn btn-sm btn-primary" href="/targets/new">Create target</a>
+  <a class="btn btn-sm btn-outline-secondary ms-2" href="/targets">View targets</a>
+</div>
 {{ end }}
-
 {{ end }}

@@ -8,45 +8,69 @@
   <a class="btn btn-primary" href="/targets/new">New</a>
 </div>
 
-<div class="table-responsive">
-  <table class="table table-sm align-middle">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Mode</th>
-        <th>Namespace</th>
-        <th>Repos</th>
-        <th>Interval</th>
-        <th>Enabled</th>
-        <th>Last run</th>
-        <th>Error</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {{ range .Targets }}
-      <tr>
-        <td class="fw-semibold">{{ .Name }}</td>
-        <td><span class="badge text-bg-secondary">{{ .Mode }}</span></td>
-        <td>{{ .Namespace }}</td>
-        <td class="text-truncate" style="max-width: 320px;">{{ .ReposCSV }}</td>
-        <td>{{ .IntervalSeconds }}s</td>
-        <td>{{ if .Enabled }}✅{{ else }}—{{ end }}</td>
-        <td class="text-muted">{{ .LastRunUTC }}</td>
-        <td class="text-danger">{{ .LastError }}</td>
-        <td>
-          <a class="btn btn-sm btn-outline-primary" href="/targets/edit?id={{ .ID }}">Edit</a>
-        </td>
-      </tr>
-      {{ end }}
-      {{ if not .Targets }}
-      <tr>
-        <td colspan="9" class="text-muted">No targets yet. Create one.</td>
-      </tr>
-      {{ end }}
-    </tbody>
-  </table>
+{{ if .Targets }}
+<div class="row g-3">
+  {{ range .Targets }}
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start gap-2">
+          <div class="min-w-0">
+            <div class="fw-semibold">{{ .Name }}</div>
+            <div class="text-muted small">{{ .Namespace }}</div>
+          </div>
+          <div class="d-flex flex-column align-items-end gap-2">
+            <span class="badge text-bg-secondary">{{ .Mode }}</span>
+            <span class="badge {{ if .Enabled }}text-bg-success{{ else }}text-bg-light{{ end }}">
+              {{ if .Enabled }}Enabled{{ else }}Disabled{{ end }}
+            </span>
+          </div>
+        </div>
+
+        {{ if .ReposCSV }}
+        <div class="mt-3">
+          <div class="text-muted small">Repos</div>
+          <div class="small text-truncate">{{ .ReposCSV }}</div>
+        </div>
+        {{ end }}
+
+        <div class="mt-3 d-flex flex-wrap gap-3 small">
+          <div>
+            <div class="text-muted">Interval</div>
+            <div class="fw-semibold">{{ .IntervalSeconds }}s</div>
+          </div>
+          {{ if .LastRunUTC }}
+          <div>
+            <div class="text-muted">Last run (UTC)</div>
+            <div class="fw-semibold">{{ .LastRunUTC }}</div>
+          </div>
+          {{ end }}
+        </div>
+
+        {{ if .LastError }}
+        <div class="mt-3 alert alert-danger py-2 mb-0">
+          <div class="small fw-semibold">Last error</div>
+          <div class="small">{{ .LastError }}</div>
+        </div>
+        {{ end }}
+      </div>
+
+      <div class="card-footer bg-transparent d-flex justify-content-end">
+        <a class="btn btn-sm btn-outline-primary" href="/targets/edit?id={{ .ID }}">Edit</a>
+      </div>
+    </div>
+  </div>
+  {{ end }}
 </div>
+{{ else }}
+<div class="alert alert-info">
+  <div class="fw-semibold mb-1">No targets yet.</div>
+  <div>Create a target to start collecting pull count snapshots.</div>
+  <div class="mt-2">
+    <a class="btn btn-sm btn-primary" href="/targets/new">Create target</a>
+  </div>
+</div>
+{{ end }}
 
 <div class="card mt-4">
   <div class="card-body">
@@ -54,27 +78,32 @@
 
     <form method="post" action="/targets">
       <div class="row g-2">
-        <div class="col-md-3">
-          <input class="form-control" name="name" placeholder="Name (e.g. floibach public)" required>
+        <div class="col-12 col-md-6 col-lg-3">
+          <label class="form-label">Name</label>
+          <input class="form-control" name="name" placeholder="e.g. floibach public" required>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-12 col-md-6 col-lg-2">
+          <label class="form-label">Mode</label>
           <select class="form-select" name="mode">
             <option value="repos">repos</option>
             <option value="user">user</option>
           </select>
         </div>
 
-        <div class="col-md-2">
-          <input class="form-control" name="namespace" placeholder="Namespace (user/org)" required>
+        <div class="col-12 col-md-6 col-lg-2">
+          <label class="form-label">Namespace</label>
+          <input class="form-control" name="namespace" placeholder="user/org" required>
         </div>
 
-        <div class="col-md-3">
-          <input class="form-control" name="repos_csv" placeholder="repos (comma sep, for repos-mode)">
+        <div class="col-12 col-md-6 col-lg-3">
+          <label class="form-label">Repos (repos-mode)</label>
+          <input class="form-control" name="repos_csv" placeholder="repo1,repo2">
         </div>
 
-        <div class="col-md-2">
-          <input class="form-control" name="interval_seconds" value="900" placeholder="interval seconds">
+        <div class="col-12 col-md-6 col-lg-2">
+          <label class="form-label">Interval (seconds)</label>
+          <input class="form-control" name="interval_seconds" value="900">
         </div>
       </div>
 
@@ -88,7 +117,7 @@
       </div>
 
       <div class="form-text mt-2">
-        Tip: For user-mode, leave repos empty. For repos-mode, set repos_csv.
+        For user-mode, leave repos empty. For repos-mode, set repos_csv.
       </div>
     </form>
   </div>
