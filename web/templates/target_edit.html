@@ -1,0 +1,51 @@
+{{ define "target_edit.html" }}
+{{ define "content" }}
+<h1 class="h3">{{ if .IsNew }}New{{ else }}Edit{{ end }} Target</h1>
+
+<form method="post" action="/targets/edit" class="card card-body">
+  {{ if not .IsNew }}<input type="hidden" name="id" value="{{ .Target.ID }}">{{ end }}
+
+  <div class="row g-2">
+    <div class="col-md-4">
+      <label class="form-label">Name</label>
+      <input class="form-control" name="name" value="{{ .Target.Name }}" required>
+    </div>
+
+    <div class="col-md-2">
+      <label class="form-label">Mode</label>
+      <select class="form-select" name="mode">
+        <option value="repos" {{ if eq .Target.Mode "repos" }}selected{{ end }}>repos</option>
+        <option value="user"  {{ if eq .Target.Mode "user" }}selected{{ end }}>user</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Namespace</label>
+      <input class="form-control" name="namespace" value="{{ .Target.Namespace }}" required>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Interval seconds</label>
+      <input class="form-control" name="interval_seconds" value="{{ .Target.IntervalSeconds }}" required>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <label class="form-label">Repos (only for repos-mode)</label>
+    <textarea class="form-control" name="repos_csv" rows="3">{{ .Target.ReposCSV }}</textarea>
+    <div class="form-text">Comma-separated. You can paste lines; spaces will be stripped.</div>
+  </div>
+
+  <div class="form-check mt-3">
+    <input class="form-check-input" type="checkbox" name="enabled" id="enabled" {{ if .Target.Enabled }}checked{{ end }}>
+    <label class="form-check-label" for="enabled">Enabled</label>
+  </div>
+
+  <div class="mt-4 d-flex gap-2">
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn btn-outline-secondary" href="/targets">Back</a>
+  </div>
+</form>
+{{ end }}
+{{ template "layout" . }}
+{{ end }}

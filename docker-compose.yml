@@ -1,0 +1,16 @@
+services:
+  watcher:
+    build: .
+    environment:
+      - DB_PATH=/data/pulls.sqlite
+      - LISTEN_ADDR=:8080
+      - HTTP_TIMEOUT=15s
+      - USER_AGENT=dockerhub-pull-watcher/1.0
+      # Optional (falls du private repos / höhere Stabilität willst):
+      # - DOCKERHUB_TOKEN=...
+    volumes:
+      - ./data:/data
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    

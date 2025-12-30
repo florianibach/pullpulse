@@ -1,0 +1,49 @@
+{{ define "repo_detail.html" }}
+{{ define "content" }}
+<h1 class="h3">{{ .Repo.Namespace }}/{{ .Repo.Name }}</h1>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">Snapshots (latest 50)</div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>TS (UTC)</th><th>Pulls</th><th>Stars</th></tr></thead>
+          <tbody>
+          {{ range .Snaps }}
+            <tr><td>{{ .TSUTC }}</td><td>{{ .PullCount }}</td><td>{{ .StarCount }}</td></tr>
+          {{ end }}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">Deltas (latest 50)</div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>To (UTC)</th><th>Δ Pulls</th><th>/h</th><th>Seconds</th></tr></thead>
+          <tbody>
+          {{ range .Deltas }}
+            <tr>
+              <td>{{ .ToTSUTC }}</td>
+              <td>{{ .Delta }}</td>
+              <td>{{ printf "%.2f" .PerHour }}</td>
+              <td>{{ .Seconds }}</td>
+            </tr>
+          {{ end }}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-3">
+  <a class="btn btn-outline-secondary" href="/repos">Back</a>
+</div>
+{{ end }}
+{{ template "layout" . }}
+{{ end }}

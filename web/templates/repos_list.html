@@ -1,0 +1,17 @@
+{{ define "repos_list.html" }}
+{{ define "content" }}
+<h1 class="h3">Known repositories</h1>
+<p class="text-muted">Repos appear here after the watcher has collected at least one snapshot.</p>
+
+<div class="list-group">
+  {{ range .Repos }}
+    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+       href="/repo?repo_id={{ .ID }}">
+      <span>{{ .Namespace }}/{{ .Name }}</span>
+      <span class="badge text-bg-light">ID {{ .ID }}</span>
+    </a>
+  {{ end }}
+</div>
+{{ end }}
+{{ template "layout" . }}
+{{ end }}
