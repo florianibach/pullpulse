@@ -91,10 +91,9 @@ services:
     volumes:
       - ./data:/data
     restart: unless-stopped
-````
+```
 
-Then open:
-**[http://localhost:8080](http://localhost:8080)**
+Then open:[http://localhost:8080](http://localhost:8080)
 
 ## Configuration
 
